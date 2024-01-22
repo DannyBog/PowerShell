@@ -1,0 +1,3 @@
+﻿$key = Get-BootKey -SystemHiveFilePath ".\registry\SYSTEM"
+$hashes = Get-ADDBAccount -All -BootKey $key -DBPath ".\Active Directory\ntds.dit" | Where-Object {$_.DisplayName -ne $null} | Select-Object DisplayName, SamAccountName, @{n="Hash"; e={($_.NTHash | ForEach-Object {$_.ToString("X2")}) -join ""}} | Sort-Object DisplayName
+if ($hashes) {$hashes | Export-Csv -Path ".\Hashes.csv" -Encoding UTF8 -NoTypeInformation}
